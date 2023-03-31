@@ -1,4 +1,4 @@
-//pub mod reader;
+pub mod reader;
 //pub mod line_parser;
 
 fn main() {
