@@ -1,20 +1,16 @@
 use std::fs;
 
-trait Reader {
-    fn read(&self) -> String;
-}
-
 struct FileReader {
-    file_path: String
+    file_path: String,
 }
 
 impl FileReader {
     pub fn new(file_path: &str) -> Self {
-        Self {file_path: file_path.to_string()}
+        Self {
+            file_path: file_path.to_string(),
+        }
     }
-}
 
-impl Reader for FileReader {
     fn read(&self) -> String {
         fs::read_to_string(self.file_path.clone()).expect("Can't read file")
     }
@@ -22,25 +18,22 @@ impl Reader for FileReader {
 
 #[cfg(test)]
 mod tests {
-    use crate::reader::FileReader;
+    use crate::file_reader::FileReader;
     use std::fs::File;
     use std::io::Write;
-    use crate::reader::Reader;
 
     #[test]
-    fn should_open_file_and_return_contents_as_string () {
+    fn should_open_file_and_return_contents_as_string() {
         //given
         let file_path = "test.asm";
         setup_test_file(file_path).unwrap();
-
         let file_reader = FileReader::new(file_path);
 
         //when
-        let contents = file_reader.read();  
-
+        let contents = file_reader.read();
         println!("read contents: {}", contents);
-        //then
 
+        //then
         assert!(!contents.is_empty());
 
         //cleanup

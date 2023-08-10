@@ -1,11 +1,18 @@
-pub mod reader;
-//pub mod line_parser;
+pub mod comment_remover;
+pub mod file_reader;
+pub mod line_parser;
 
 fn main() {
     println!("Hello, world!");
 }
 
-// asssemberis
+/*
+ * TODO: issiaiskinti, prisiminti ka cia reikia padaryti.
+ * reikia prisiminti ka as cia isvis darau.
+ * kaip parsinu, ka cia parsinu, reiktu pavyzduku pasiziureti. atsisiuti kad doca, kuris
+ *
+ */
+// asssemberis fzf
 // kas turi but padaryta
 //
 // moduliai:
@@ -23,13 +30,10 @@ fn main() {
  *
  * kiekviena eilute isparsinti pagal komandos tipa:
  * - prasideda @:
- * -- A instrukcija: 
+ * -- A instrukcija:
  *      pasiimti kas eina po @ ir paversti i binary
  *
  * -- NEprasideda @:
  * -- C instrucija:
  *      isskaidyti kiekviena dali atskirai i jos komponentus TODO
  */
-
-
-
