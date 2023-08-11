@@ -2,10 +2,10 @@ ka cia reikia padaryti su assembleriu:
 
 - DONE - perskaityti faila, nurodant file path 
 - DONE - perskaityti kiekviena eilute is failo, ir susideti i lista
---------------------------------------------------
-- istrinti visus komentarus, jeigu prasideda du `//` tada viska isstrinti
+- DONE - istrinti visus komentarus, jeigu prasideda du `//` tada viska isstrinti
 --------------------------------------------------
 - isstrinti visus white spaces
+--------------------------------------------------
 - isstrinti visas empty line
 
 ### NO symbols

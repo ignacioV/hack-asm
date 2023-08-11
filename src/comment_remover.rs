@@ -1,7 +1,11 @@
-// gaunu strings[] , dabar kiekvienas is ju turi, jei turi // <comment>, man viska reikia isstrinti
+use regex::Regex;
 
 pub fn remove_comments(content: Vec<String>) -> Vec<String> {
-    // todo find all `// <any length ... >` and replace it with empty string
+    let re = Regex::new(r"//.*$").unwrap();
+    let content: Vec<String> = content
+        .into_iter()
+        .map(|s| re.replace_all(&s, "").to_string())
+        .collect();
     content
 }
 
@@ -28,7 +32,7 @@ mod test {
     }
 
     #[test]
-    fn sample_strings() {
+    fn should_remove_multiple_line_comments() {
         //given
         let content: Vec<String> = vec![
             "// this is the start",
@@ -42,9 +46,15 @@ mod test {
         .collect();
 
         //when
-        println!("content: {:?}", content);
+        let result = remove_comments(content);
+        println!("result: {:?}", result);
 
         //then
-        assert_eq!(content.len(), 5);
+        assert_eq!(result.len(), 5);
+        assert_eq!(result[0], "".to_string());
+        assert_eq!(result[1], "someCMD".to_string());
+        assert_eq!(result[2], "otherCMD ".to_string());
+        assert_eq!(result[3], "idk     ".to_string());
+        assert_eq!(result[4], "   ".to_string());
     }
 }
