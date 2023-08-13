@@ -1,3 +1,4 @@
+pub mod blank_line_remover;
 pub mod comment_remover;
 pub mod file_reader;
 pub mod line_parser;
