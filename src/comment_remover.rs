@@ -20,10 +20,9 @@ mod test {
             .into_iter()
             .map(|s| s.to_string())
             .collect();
+        //println!("content: {:#?}", content);
 
         //when
-        println!("content: {:#?}", content);
-
         let result: Vec<String> = remove_comments(content);
 
         //then
@@ -47,7 +46,7 @@ mod test {
 
         //when
         let result = remove_comments(content);
-        println!("result: {:?}", result);
+        //println!("result: {:?}", result);
 
         //then
         assert_eq!(result.len(), 5);
