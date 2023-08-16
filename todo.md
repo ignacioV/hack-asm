@@ -5,11 +5,20 @@ ka cia reikia padaryti su assembleriu:
 - DONE - istrinti visus komentarus, jeigu prasideda du `//` tada viska isstrinti
 - DONE - isstrinti visus white spaces
 --------------------------------------------------
-- isstrinti visas empty line
+- DONE - isstrinti visas empty line
 --------------------------------------------------
 
-### NO symbols
+# Komandu parsinimas
 
+--- komandos @ parsinimas
+- paziureti ar prasideda komanda su `@` ->
+- paversti ta skaiciu einanti po `@` i binary
+- issaugoti ji kaip `1 + binary skaicius (padded to n=15)` // op code = 1
+
+// saugoti abidvi komanadas i enuma. ir abudu enumai tures `fn toMachine() -> String`
+
+
+### NO symbols
 - paziureti kaip prasideda komanda, ir isparsinti i A ir C komandas
     - A komands: jei prasideda `@`
     tiesiog skaiciu paversti i dvejetaini ir prideti nulius

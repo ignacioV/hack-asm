@@ -3,6 +3,7 @@ pub mod comment_remover;
 pub mod file_reader;
 pub mod line_parser;
 pub mod whitespace_remover;
+pub mod command_parser;
 
 fn main() {
     println!("Hello, world!");
