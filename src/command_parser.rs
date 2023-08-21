@@ -1,17 +1,17 @@
-
 // A command stuff------------------------------
 
 pub struct A_CMD {
-    reference: u16
+    reference: u16,
 }
 
 impl A_CMD {
-
     const PREFIX: &str = "@";
     const OP_CODE: &str = "0";
 
     pub fn new(cmd: &str) -> Self {
-        Self { reference: Self::get_int_val(cmd) }
+        Self {
+            reference: Self::get_int_val(cmd),
+        }
     }
 
     pub fn is_a_command(command: &str) -> bool {
@@ -27,6 +27,7 @@ impl A_CMD {
         format!("{}{:0>15}", A_CMD::OP_CODE, binary_val)
     }
 }
+
 #[cfg(test)]
 mod test_struct {
 
@@ -67,13 +68,12 @@ mod test_struct {
         //then
         let mut expected: String = "".to_string();
         expected.push_str(&"0"); // op code 0 + 0's for 4 bits
-        expected.push_str(&"000"); 
-        expected.push_str(&"0000"); 
-        expected.push_str(&"0000"); 
-        expected.push_str(&"0001"); 
+        expected.push_str(&"000");
+        expected.push_str(&"0000");
+        expected.push_str(&"0000");
+        expected.push_str(&"0001");
         assert_eq!(got, expected)
     }
-
 }
 //----------------------------------------
 //----------------------------------------
@@ -92,8 +92,8 @@ pub fn a_cmd_to_binary(a_command: String) -> String {
 
 #[cfg(test)]
 mod test {
-    use crate::command_parser::is_a_command;
     use crate::command_parser::a_cmd_to_binary;
+    use crate::command_parser::is_a_command;
 
     #[test]
     fn should_determine_string_is_a_command() {
@@ -130,11 +130,10 @@ mod test {
         //then
         let mut expected: String = "".to_string();
         expected.push_str(&"0"); // op code 0 + 0's for 4 bits
-        expected.push_str(&"000"); 
-        expected.push_str(&"0000"); 
-        expected.push_str(&"0000"); 
-        expected.push_str(&"0001"); 
+        expected.push_str(&"000");
+        expected.push_str(&"0000");
+        expected.push_str(&"0000");
+        expected.push_str(&"0001");
         assert_eq!(got, expected)
     }
 }
-
