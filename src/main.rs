@@ -1,5 +1,5 @@
+pub mod a_command_parser;
 pub mod blank_line_remover;
-pub mod command_parser;
 pub mod comment_remover;
 pub mod file_reader;
 pub mod line_parser;

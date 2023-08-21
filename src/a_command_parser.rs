@@ -31,7 +31,7 @@ impl A_CMD {
 #[cfg(test)]
 mod test_struct {
 
-    use crate::command_parser::A_CMD;
+    use crate::a_command_parser::A_CMD;
 
     #[test]
     fn should_determine_type_a_command() {
@@ -92,8 +92,8 @@ pub fn a_cmd_to_binary(a_command: String) -> String {
 
 #[cfg(test)]
 mod test {
-    use crate::command_parser::a_cmd_to_binary;
-    use crate::command_parser::is_a_command;
+    use crate::a_command_parser::a_cmd_to_binary;
+    use crate::a_command_parser::is_a_command;
 
     #[test]
     fn should_determine_string_is_a_command() {
