@@ -4,8 +4,9 @@ pub struct A_CMD {
     reference: u16,
 }
 
+pub const A_CMD_PREFIX: &str = "@";
+
 impl A_CMD {
-    const PREFIX: &str = "@";
     const OP_CODE: &str = "0";
 
     pub fn new(cmd: &str) -> Self {
@@ -15,7 +16,7 @@ impl A_CMD {
     }
 
     pub fn is_a_command(command: &str) -> bool {
-        command.starts_with(A_CMD::PREFIX)
+        command.starts_with(A_CMD_PREFIX)
     }
 
     fn get_int_val(cmd: &str) -> u16 {
