@@ -106,6 +106,6 @@ mod test_struct {
         //then
         let expected: String = String::from("1110101010000000");
         println!("{}", result)
-        //assert!(result)
+        assert_eq!(result, expected)
     }
 }
