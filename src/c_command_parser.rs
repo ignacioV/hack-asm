@@ -10,6 +10,7 @@ pub enum COMP {
     _0,
     _1,
     A,
+    M_MINUS_D,
 }
 impl COMP {
     pub fn from(comp_command: &str) -> Self {
@@ -17,6 +18,7 @@ impl COMP {
             "0" => COMP::_0,
             "1" => COMP::_1,
             "A" => COMP::A,
+            "M-D" => COMP::M_MINUS_D,
             _any => todo!("[{}] was not expected", _any),
         }
     }
@@ -26,6 +28,7 @@ impl COMP {
             COMP::_0 => String::from("101010"),
             COMP::_1 => String::from("111111"),
             COMP::A => String::from("110000"),
+            COMP::M_MINUS_D => String::from("000111"),
         }
     }
 
@@ -34,6 +37,7 @@ impl COMP {
             COMP::_0 => String::from("0"),
             COMP::_1 => String::from("0"),
             COMP::A => String::from("0"),
+            COMP::M_MINUS_D => String::from("1"),
         }
     }
 }
@@ -41,11 +45,15 @@ impl COMP {
 pub enum DEST {
     null,
     M,
+    AM,
+    AD,
 }
 impl DEST {
     pub fn from(dest_command: &str) -> Self {
         match dest_command {
             "M" => DEST::M,
+            "AM" => DEST::AM,
+            "AD" => DEST::AD,
             "" => DEST::null,
             _any => todo!("[{}] was not expected", _any),
         }
@@ -55,17 +63,21 @@ impl DEST {
         match self {
             DEST::null => String::from("000"),
             DEST::M => String::from("001"),
+            DEST::AM => String::from("101"),
+            DEST::AD => String::from("110"),
         }
     }
 }
 
 pub enum JMP {
     null,
+    JNE,
 }
 impl JMP {
     pub fn from(jmp_command: &str) -> Self {
         match jmp_command {
             "" => JMP::null,
+            "JNE" => JMP::JNE,
             _any => todo!("[{}] was not expected", _any),
         }
     }
@@ -73,6 +85,7 @@ impl JMP {
     pub fn value(&self) -> String {
         match self {
             JMP::null => String::from("000"),
+            JMP::JNE => String::from("101"),
         }
     }
 }
