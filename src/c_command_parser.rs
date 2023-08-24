@@ -168,13 +168,13 @@ impl DEST {
     pub fn value(&self) -> String {
         match self {
             DEST::null => String::from("000"),
-            DEST::M,=> String::from("001"),
-            DEST::D,=> String::from("010"),
-            DEST::DM,=> String::from("011"),
-            DEST::A,=> String::from("100"),
-            DEST::AM,=> String::from("101"),
-            DEST::AD,=> String::from("110"),
-            DEST::ADM,=> String::from("111"),
+            DEST::M => String::from("001"),
+            DEST::D => String::from("010"),
+            DEST::DM => String::from("011"),
+            DEST::A => String::from("100"),
+            DEST::AM => String::from("101"),
+            DEST::AD => String::from("110"),
+            DEST::ADM => String::from("111"),
         }
     }
 }
@@ -182,21 +182,39 @@ impl DEST {
 #[allow(non_camel_case_types)]
 pub enum JMP {
     null,
+    JGT,
+    JEQ,
+    JGE,
+    JLT,
     JNE,
+    JLE,
+    JMP,
 }
 impl JMP {
     pub fn from(jmp_command: &str) -> Self {
         match jmp_command {
             "" => JMP::null,
+            "JGT" => JMP::JGT,
+            "JEQ" => JMP::JEQ,
+            "JGE" => JMP::JGE,
+            "JLT" => JMP::JLT,
             "JNE" => JMP::JNE,
-            _any => todo!("[{}] was not expected", _any),
+            "JLE" => JMP::JLE,
+            "JMP" => JMP::JMP,
+            _any => todo!("[{}] JMP was not expected", _any),
         }
     }
 
     pub fn value(&self) -> String {
         match self {
             JMP::null => String::from("000"),
+            JMP::JGT => String::from("001"),
+            JMP::JEQ => String::from("010"),
+            JMP::JGE => String::from("011"),
+            JMP::JLT => String::from("100"),
             JMP::JNE => String::from("101"),
+            JMP::JLE => String::from("110"),
+            JMP::JMP => String::from("111"),
         }
     }
 }
