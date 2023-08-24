@@ -9,16 +9,15 @@ pub struct C_CMD {
 pub enum COMP {
     _0,
     _1,
-    A
+    A,
 }
 impl COMP {
-
     pub fn from(comp_command: &str) -> Self {
         match comp_command {
             "0" => COMP::_0,
             "1" => COMP::_1,
             "A" => COMP::A,
-             _ => todo!("[{}] was not expected", comp_command),
+            _any => todo!("[{}] was not expected", _any),
         }
     }
 
@@ -41,11 +40,21 @@ impl COMP {
 
 pub enum DEST {
     null,
+    M,
 }
 impl DEST {
+    pub fn from(dest_command: &str) -> Self {
+        match dest_command {
+            "M" => DEST::M,
+            "" => DEST::null,
+            _any => todo!("[{}] was not expected", _any),
+        }
+    }
+
     pub fn value(&self) -> String {
         match self {
             DEST::null => String::from("000"),
+            DEST::M => String::from("001"),
         }
     }
 }
@@ -54,27 +63,50 @@ pub enum JMP {
     null,
 }
 impl JMP {
+    pub fn from(jmp_command: &str) -> Self {
+        match jmp_command {
+            "" => JMP::null,
+            _any => todo!("[{}] was not expected", _any),
+        }
+    }
+
     pub fn value(&self) -> String {
         match self {
             JMP::null => String::from("000"),
         }
     }
-
 }
 
+fn parse_into_parts(cmd: &str) -> (&str, &str, &str) {
+    let dest_comp: Vec<&str> = cmd.split("=").collect();
+    if dest_comp.len() == 1 {
+
+        let comp_jmp: Vec<&str> = dest_comp[0].split(";").collect();
+        if comp_jmp.len() == 1 {
+            return ("", comp_jmp[0], "");
+        } else {
+            return ("", comp_jmp[0], comp_jmp[1]);
+        }
+
+    }
+    let dest = dest_comp[0];
+    let comp_jmp: Vec<&str> = dest_comp[1].split(";").collect();
+    if comp_jmp.len() == 1 {
+        return (dest, comp_jmp[0], "");
+    }
+    (dest, comp_jmp[0], comp_jmp[1])
+}
 
 impl C_CMD {
     const OP_CODE: &str = "1";
     const FILLER: &str = "11";
 
     pub fn new(cmd: &str) -> Self {
-        // parse just COMP but how to determine
-        // jeigu yra = -> yea DEST -> nuo 0 iki `=` simbolio idx
-        // jeigu yra ; -> yra JMP -> nuo `;` simbolio idx iki pabaigos
+        let (dest, comp, jmp) = parse_into_parts(cmd);
         Self {
-            computation: COMP::from(cmd),
-            destination: DEST::null,
-            jump: JMP::null,
+            computation: COMP::from(comp),
+            destination: DEST::from(dest),
+            jump: JMP::from(jmp),
         }
     }
 
@@ -126,7 +158,7 @@ mod test_struct {
     }
 
     #[test]
-    fn should_generate_c_command_from_string() {
+    fn should_generate_c_command_with_just_comp() {
         //given
         let c_command: C_CMD = C_CMD::new("A");
 
@@ -136,5 +168,89 @@ mod test_struct {
         //then
         let expected: String = String::from("1110110000000000");
         assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn should_generate_c_command_with_dest_and_comp() {
+        //given
+        let c_command: C_CMD = C_CMD::new("M=A");
+
+        //when
+        let result: String = c_command.to_binary();
+
+        //then
+        let expected: String = String::from("1110110000001000");
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_string_split() {
+        //given
+        let value = "D=D+A;JEQ";
+
+        //when
+        let parts: Vec<&str> = value.split("=").collect();
+
+        //then
+        assert_eq!(2, parts.len());
+        assert_eq!("D", parts[0]);
+        assert_eq!("D+A;JEQ", parts[1]);
+    }
+
+    use crate::c_command_parser::parse_into_parts;
+    #[test]
+    fn should_parse_into_parts_just_comp() {
+        //given
+        let cmd = "D+A";
+
+        //when
+        let (dest, comp, jmp) = parse_into_parts(cmd);
+
+        //then
+        assert_eq!("", dest);
+        assert_eq!("D+A", comp);
+        assert_eq!("", jmp);
+    }
+
+    #[test]
+    fn should_parse_into_parts_dest_and_comp() {
+        //given
+        let cmd = "D=D+A";
+
+        //when
+        let (dest, comp, jmp) = parse_into_parts(cmd);
+
+        //then
+        assert_eq!("D", dest);
+        assert_eq!("D+A", comp);
+        assert_eq!("", jmp);
+    }
+
+    #[test]
+    fn should_parse_into_parts_full_cmd() {
+        //given
+        let cmd = "D=D+A;JEQ";
+
+        //when
+        let (dest, comp, jmp) = parse_into_parts(cmd);
+
+        //then
+        assert_eq!("D", dest);
+        assert_eq!("D+A", comp);
+        assert_eq!("JEQ", jmp);
+    }
+
+    #[test]
+    fn should_parse_into_parts_comp_jump() {
+        //given
+        let cmd = "D+A;JEQ";
+
+        //when
+        let (dest, comp, jmp) = parse_into_parts(cmd);
+
+        //then
+        assert_eq!("", dest);
+        assert_eq!("D+A", comp);
+        assert_eq!("JEQ", jmp);
     }
 }
