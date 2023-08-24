@@ -6,19 +6,68 @@ pub struct C_CMD {
     jump: JMP,
 }
 
+#[allow(non_camel_case_types)]
 pub enum COMP {
     _0,
     _1,
+    MINUS_1,
+    D,
     A,
+    NOT_D,
+    NOT_A,
+    MINUS_D,
+    MINUS_A,
+    D_PLUS_1,
+    A_PLUS_1,
+    D_MINUS_1,
+    A_MINUS_1,
+    D_PLUS_A,
+    D_MINUS_A,
+    A_MINUS_D,
+    D_AND_A,
+    D_OR_A,
+    M,
+    NOT_M,
+    MINUS_M,
+    M_PLUS_1,
+    M_MINUS_1,
+    D_PLUS_M,
+    D_MINUS_M,
     M_MINUS_D,
+    D_AND_M,
+    D_OR_M
 }
 impl COMP {
     pub fn from(comp_command: &str) -> Self {
         match comp_command {
             "0" => COMP::_0,
             "1" => COMP::_1,
+            "-1" => COMP::MINUS_1,
+            "D" => COMP::D,
             "A" => COMP::A,
+            "!D" => COMP::NOT_D,
+            "!A" => COMP::NOT_A,
+            "-D" => COMP::MINUS_D,
+            "-A" => COMP::MINUS_A,
+            "D+1" => COMP::D_PLUS_1,
+            "A+1" => COMP::A_PLUS_1,
+            "A-1" => COMP::A_MINUS_1,
+            "D-1" => COMP::D_MINUS_1,
+            "D+A" => COMP::D_PLUS_A,
+            "D-A" => COMP::D_MINUS_A,
+            "A-D" => COMP::A_MINUS_D,
+            "D&A" => COMP::D_AND_A,
+            "D|A" => COMP::D_OR_A,
+            "M" => COMP::M,
+            "!M" => COMP::NOT_M,
+            "-M" => COMP::MINUS_M,
+            "M+1" => COMP::M_PLUS_1,
+            "M-1" => COMP::M_MINUS_1,
+            "D+M" => COMP::D_PLUS_M,
+            "D-M" => COMP::D_MINUS_M,
             "M-D" => COMP::M_MINUS_D,
+            "D&M" => COMP::D_AND_M,
+            "D|M" => COMP::D_OR_M,
             _any => todo!("[{}] was not expected", _any),
         }
     }
@@ -27,8 +76,32 @@ impl COMP {
         match &self {
             COMP::_0 => String::from("101010"),
             COMP::_1 => String::from("111111"),
+            COMP::MINUS_1 => String::from("111010"),
+            COMP::D => String::from("001100"),
             COMP::A => String::from("110000"),
+            COMP::NOT_D => String::from("001101"),
+            COMP::NOT_A => String::from("110001"),
+            COMP::MINUS_D => String::from("001111"),
+            COMP::MINUS_A => String::from("110011"),
+            COMP::D_PLUS_1 => String::from("011111"),
+            COMP::A_PLUS_1 => String::from("110111"),
+            COMP::D_MINUS_1 => String::from("001110"),
+            COMP::A_MINUS_1 => String::from("110010"),
+            COMP::D_PLUS_A => String::from("000010"),
+            COMP::D_MINUS_A => String::from("010011"),
+            COMP::A_MINUS_D => String::from("000111"),
+            COMP::D_AND_A => String::from("000000"),
+            COMP::D_OR_A => String::from("010101"),
+            COMP::M => String::from("110000"),
+            COMP::NOT_M => String::from("110001"),
+            COMP::MINUS_M => String::from("110011"),
+            COMP::M_PLUS_1 => String::from("110111"),
+            COMP::M_MINUS_1 => String::from("110010"),
+            COMP::D_PLUS_M => String::from("000010"),
+            COMP::D_MINUS_M => String::from("010011"),
             COMP::M_MINUS_D => String::from("000111"),
+            COMP::D_AND_M => String::from("000000"),
+            COMP::D_OR_M => String::from("010101"),
         }
     }
 
@@ -36,12 +109,37 @@ impl COMP {
         match &self {
             COMP::_0 => String::from("0"),
             COMP::_1 => String::from("0"),
+            COMP::MINUS_1 => String::from("0"),
+            COMP::D => String::from("0"),
             COMP::A => String::from("0"),
+            COMP::NOT_D => String::from("0"),
+            COMP::NOT_A => String::from("0"),
+            COMP::MINUS_D => String::from("0"),
+            COMP::MINUS_A => String::from("0"),
+            COMP::D_PLUS_1 => String::from("0"),
+            COMP::A_PLUS_1 => String::from("0"),
+            COMP::D_MINUS_1 => String::from("0"),
+            COMP::A_MINUS_1 => String::from("0"),
+            COMP::D_PLUS_A => String::from("0"),
+            COMP::D_MINUS_A => String::from("0"),
+            COMP::A_MINUS_D => String::from("0"),
+            COMP::D_AND_A => String::from("0"),
+            COMP::D_OR_A => String::from("0"),
+            COMP::M => String::from("1"),
+            COMP::NOT_M => String::from("1"),
+            COMP::MINUS_M => String::from("1"),
+            COMP::M_PLUS_1 => String::from("1"),
+            COMP::M_MINUS_1 => String::from("1"),
+            COMP::D_PLUS_M => String::from("1"),
+            COMP::D_MINUS_M => String::from("1"),
             COMP::M_MINUS_D => String::from("1"),
+            COMP::D_AND_M => String::from("1"),
+            COMP::D_OR_M => String::from("1"),
         }
     }
 }
 
+#[allow(non_camel_case_types)]
 pub enum DEST {
     null,
     M,
@@ -69,6 +167,7 @@ impl DEST {
     }
 }
 
+#[allow(non_camel_case_types)]
 pub enum JMP {
     null,
     JNE,
