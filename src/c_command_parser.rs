@@ -143,26 +143,38 @@ impl COMP {
 pub enum DEST {
     null,
     M,
+    D,
+    DM,
+    A,
     AM,
     AD,
+    ADM,
 }
 impl DEST {
     pub fn from(dest_command: &str) -> Self {
         match dest_command {
+            "" => DEST::null,
             "M" => DEST::M,
+            "D" => DEST::D,
+            "DM" => DEST::DM,
+            "A" => DEST::A,
             "AM" => DEST::AM,
             "AD" => DEST::AD,
-            "" => DEST::null,
-            _any => todo!("[{}] was not expected", _any),
+            "ADM" => DEST::ADM,
+            _any => todo!("[{}] DEST was not expected", _any),
         }
     }
 
     pub fn value(&self) -> String {
         match self {
             DEST::null => String::from("000"),
-            DEST::M => String::from("001"),
-            DEST::AM => String::from("101"),
-            DEST::AD => String::from("110"),
+            DEST::M,=> String::from("001"),
+            DEST::D,=> String::from("010"),
+            DEST::DM,=> String::from("011"),
+            DEST::A,=> String::from("100"),
+            DEST::AM,=> String::from("101"),
+            DEST::AD,=> String::from("110"),
+            DEST::ADM,=> String::from("111"),
         }
     }
 }
