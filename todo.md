@@ -6,7 +6,7 @@ ka cia reikia padaryti su assembleriu:
 - DONE - isstrinti visus white spaces
 - DONE - isstrinti visas empty line
 
-# Komandu parsinimas
+# Komandu parsinimas DONE
 
 - DONE --- komandos @ parsinimas
 - DONE paziureti ar prasideda komanda su `@` ->
@@ -17,9 +17,7 @@ ka cia reikia padaryti su assembleriu:
 - jeigu neprasideda `@` -> tada bus C komanda 
 - OP code = `1` 
 - +filleris `11`
---------------------------------------------------
 - pradzioj - paprasta `COMP` komanda -> priskirti i enum value
---------------------------------------------------
 - jeigu yra `=` -> isparsinti `DEST` ir priskirti i enum value
 - jeigu yra `;` -> isparsinti `JMP`  ir priskirti i enum value
 
@@ -27,6 +25,7 @@ ka cia reikia padaryti su assembleriu:
 Symbolic syntax: dest = comp ; jump
 ==============================================================
 Binary syntax: 1 1 1 a c c c c c c d d d j j j
+==============================================================
 ==============================================================
 
 COMP        c c c c c c
@@ -85,19 +84,22 @@ JMP  | 1 | 1 | 1 | Unconditional jump
 
 
 ### NO symbols
-- paziureti kaip prasideda komanda, ir isparsinti i A ir C komandas
-    - A komands: jei prasideda `@`
+- DONE - paziureti kaip prasideda komanda, ir isparsinti i A ir C komandas
+    - DONE - A komands: jei prasideda `@`
     tiesiog skaiciu paversti i dvejetaini ir prideti nulius
     toMachineCommand() -> 1 + `binary skaicius is komandos`
 
-    - C komands: nei ne prasideda @?
+    - DONE -C komands: nei ne prasideda @?
     jeigu yra `=` tada reiskia bus DEST -> priskirti is ENUM DEST value / arba null
     tada bus COMP -> priskirti is ENUM COMP value
     jeigu yra `;` tada bus JUMP -> priskirti is ENUM JUMP value / arba null
     - kiekvienas is situ tures savo binary value ENUMe
     toMAchineCommand() -> opCode + 111 + DEST.binary + COMP.binary + JMP.binary
 
+
+--------------------------------------------------
 - praeiti kiekviena komanda ir paversti i machineCommand -> machineCommand[]
+--------------------------------------------------
 - pereiti pro mCmd[] ir surasyti i output faila `hack.asm` ?
 
 ### WITH symbols
