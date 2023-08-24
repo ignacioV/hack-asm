@@ -184,6 +184,19 @@ mod test_struct {
     }
 
     #[test]
+    fn should_generate_c_command_full() {
+        //given
+        let c_command: C_CMD = C_CMD::new("AD=M-D;JNE");
+
+        //when
+        let result: String = c_command.to_binary();
+
+        //then
+        let expected: String = format!("{}{}{}{}{}", "111", "1", "000111", "110", "101");
+        assert_eq!(result, expected);
+    }
+
+    #[test]
     fn test_string_split() {
         //given
         let value = "D=D+A;JEQ";
