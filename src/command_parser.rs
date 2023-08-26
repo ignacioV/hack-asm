@@ -33,10 +33,18 @@ pub fn parse_simple(commands: Vec<&str>) -> Vec<SimpleCommand> {
         .collect()
 }
 
+pub fn turn_into_binary(commands: Vec<SimpleCommand>) -> Vec<String> {
+    commands
+        .into_iter()
+        .map(|cmd| cmd.to_binary())
+        .collect()
+}
+
 #[cfg(test)]
 mod command_test {
     use crate::command_parser::parse_simple;
     use crate::command_parser::SimpleCommand;
+    use crate::command_parser::turn_into_binary;
 
     #[test]
     fn should_create_a_command() {
@@ -80,5 +88,26 @@ mod command_test {
         assert_eq!("1111000111010101", result[1].to_binary());
         assert_eq!("0000000101000001", result[2].to_binary());
         assert_eq!("1111010101100000", result[3].to_binary());
+    }
+
+    #[test]
+    fn should_turn_vec_command_to_binary_vec() {
+        //given
+        let a_cmd1: &str = "@123";
+        let c_cmd2: &str = "D=M-D;JNE";
+        let a_cmd3: &str = "@321";
+        let c_cmd4: &str = "A=D|M";
+        let commands: Vec<&str> = vec![a_cmd1, c_cmd2, a_cmd3, c_cmd4];
+        let parsed_commands = parse_simple(commands);
+
+        //when
+        let result: Vec<String> = turn_into_binary(parsed_commands);
+
+        //then
+        assert_eq!(result.len(), 4);
+        assert_eq!("0000000001111011", result[0]);
+        assert_eq!("1111000111010101", result[1]);
+        assert_eq!("0000000101000001", result[2]);
+        assert_eq!("1111010101100000", result[3]);
     }
 }
