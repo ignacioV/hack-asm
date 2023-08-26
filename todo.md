@@ -94,17 +94,13 @@ JMP  | 1 | 1 | 1 | Unconditional jump
     - kiekvienas is situ tures savo binary value ENUMe
     toMAchineCommand() -> opCode + 111 + DEST.binary + COMP.binary + JMP.binary
 
+- DONE - praeiti kiekviena komanda ir paversti i machineCommand -> machineCommand[]
+- DONE - pereiti pro mCmd[] ir surasyti i output faila `hack.asm` ? - tureti kaskoki test failiuka, kur galeciau palyginti ar teisingai isparsinau
+
 
 --------------------------------------------------
-- praeiti kiekviena komanda ir paversti i machineCommand -> machineCommand[]
-    dabar pasidaryti kad galeciau pereiti per visas komandas, paversti jas i commanda,
-    ir tureti array komandu, vektoriu
-    
---------------------------------------------------
-- pereiti pro mCmd[] ir surasyti i output faila `hack.asm` ? - tureti kaskoki test failiuka, kur galeciau palyginti ar teisingai isparsinau
-
-
 ### WITH symbols
+--------------------------------------------------
 
 - tureti MAP, kuris butu symbols table. Prideti default values i ji
 - pereiti per visas eilutes, ir sunumeruoti jas ( iskyrus LABELS ) linked list?
