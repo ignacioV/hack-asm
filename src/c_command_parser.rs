@@ -37,7 +37,7 @@ pub enum COMP {
     D_MINUS_M,
     M_MINUS_D,
     D_AND_M,
-    D_OR_M
+    D_OR_M,
 }
 impl COMP {
     pub fn from(comp_command: &str) -> Self {
@@ -226,14 +226,12 @@ impl JMP {
 fn parse_into_parts(cmd: &str) -> (&str, &str, &str) {
     let dest_comp: Vec<&str> = cmd.split("=").collect();
     if dest_comp.len() == 1 {
-
         let comp_jmp: Vec<&str> = dest_comp[0].split(";").collect();
         if comp_jmp.len() == 1 {
             return ("", comp_jmp[0], "");
         } else {
             return ("", comp_jmp[0], comp_jmp[1]);
         }
-
     }
     let dest = dest_comp[0];
     let comp_jmp: Vec<&str> = dest_comp[1].split(";").collect();

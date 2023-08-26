@@ -8,9 +8,7 @@ pub enum SimpleCommand {
 }
 
 impl SimpleCommand {
-
     pub fn new(cmd: &str) -> Self {
-
         if A_CMD::is_a_command(cmd) {
             return Self::A(A_CMD::new(cmd));
         }
@@ -23,19 +21,22 @@ impl SimpleCommand {
     pub fn to_binary(&self) -> String {
         match self {
             SimpleCommand::A(a_cmd) => a_cmd.to_binary(),
-            SimpleCommand::C(c_cmd) => c_cmd.to_binary()
+            SimpleCommand::C(c_cmd) => c_cmd.to_binary(),
         }
     }
 }
 
 pub fn parse_simple(commands: Vec<&str>) -> Vec<SimpleCommand> {
-    commands.into_iter().map(|cmd| SimpleCommand::new(cmd)).collect()
+    commands
+        .into_iter()
+        .map(|cmd| SimpleCommand::new(cmd))
+        .collect()
 }
 
 #[cfg(test)]
 mod command_test {
-    use crate::command_parser::SimpleCommand;
     use crate::command_parser::parse_simple;
+    use crate::command_parser::SimpleCommand;
 
     #[test]
     fn should_create_a_command() {
@@ -46,7 +47,7 @@ mod command_test {
         let result = SimpleCommand::new(a_cmd);
 
         //then
-        assert_eq!( "0000000001111011", result.to_binary());
+        assert_eq!("0000000001111011", result.to_binary());
     }
 
     #[test]
