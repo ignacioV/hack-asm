@@ -34,17 +34,14 @@ pub fn parse_simple(commands: Vec<&str>) -> Vec<SimpleCommand> {
 }
 
 pub fn turn_into_binary(commands: Vec<SimpleCommand>) -> Vec<String> {
-    commands
-        .into_iter()
-        .map(|cmd| cmd.to_binary())
-        .collect()
+    commands.into_iter().map(|cmd| cmd.to_binary()).collect()
 }
 
 #[cfg(test)]
 mod command_test {
     use crate::command_parser::parse_simple;
-    use crate::command_parser::SimpleCommand;
     use crate::command_parser::turn_into_binary;
+    use crate::command_parser::SimpleCommand;
 
     #[test]
     fn should_create_a_command() {

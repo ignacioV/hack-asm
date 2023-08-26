@@ -4,6 +4,7 @@ pub mod c_command_parser;
 pub mod command_parser;
 pub mod comment_remover;
 pub mod file_reader;
+pub mod hack_file_writer;
 pub mod line_parser;
 pub mod whitespace_remover;
 
