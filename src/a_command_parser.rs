@@ -1,5 +1,4 @@
-// A command stuff------------------------------
-
+#[derive(Debug)]
 pub struct A_CMD {
     reference: u16,
 }
@@ -23,7 +22,7 @@ impl A_CMD {
         cmd[1..].parse::<u16>().unwrap()
     }
 
-    fn to_binary(&self) -> String {
+    pub fn to_binary(&self) -> String {
         let binary_val: String = format!("{:b}", self.reference);
         format!("{}{:0>15}", A_CMD::OP_CODE, binary_val)
     }

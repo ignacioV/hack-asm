@@ -1,5 +1,6 @@
 use crate::a_command_parser::A_CMD_PREFIX;
 
+#[derive(Debug)]
 pub struct C_CMD {
     computation: COMP,
     destination: DEST,
@@ -7,6 +8,7 @@ pub struct C_CMD {
 }
 
 #[allow(non_camel_case_types)]
+#[derive(Debug)]
 pub enum COMP {
     _0,
     _1,
@@ -140,6 +142,7 @@ impl COMP {
 }
 
 #[allow(non_camel_case_types)]
+#[derive(Debug)]
 pub enum DEST {
     null,
     M,
@@ -180,6 +183,7 @@ impl DEST {
 }
 
 #[allow(non_camel_case_types)]
+#[derive(Debug)]
 pub enum JMP {
     null,
     JGT,
@@ -256,7 +260,7 @@ impl C_CMD {
         !command.starts_with(A_CMD_PREFIX)
     }
 
-    fn to_binary(&self) -> String {
+    pub fn to_binary(&self) -> String {
         format!(
             "{}{}{}{}{}{}",
             C_CMD::OP_CODE,

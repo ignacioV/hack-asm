@@ -80,8 +80,6 @@ JMP  | 1 | 1 | 1 | Unconditional jump
 --------------------------------------
 
 --------------------------------------------------
-// LATER: saugoti abidvi komanadas i enuma. ir abudu enumai tures `fn toMachine() -> String`
-
 
 ### NO symbols
 - DONE - paziureti kaip prasideda komanda, ir isparsinti i A ir C komandas
@@ -99,8 +97,12 @@ JMP  | 1 | 1 | 1 | Unconditional jump
 
 --------------------------------------------------
 - praeiti kiekviena komanda ir paversti i machineCommand -> machineCommand[]
+    dabar pasidaryti kad galeciau pereiti per visas komandas, paversti jas i commanda,
+    ir tureti array komandu, vektoriu
+    
 --------------------------------------------------
-- pereiti pro mCmd[] ir surasyti i output faila `hack.asm` ?
+- pereiti pro mCmd[] ir surasyti i output faila `hack.asm` ? - tureti kaskoki test failiuka, kur galeciau palyginti ar teisingai isparsinau
+
 
 ### WITH symbols
 
