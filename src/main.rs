@@ -7,6 +7,7 @@ pub mod file_reader;
 pub mod hack_file_writer;
 pub mod line_parser;
 pub mod whitespace_remover;
+pub mod symbol_parser;
 
 fn main() {
     println!("Hello, world!");

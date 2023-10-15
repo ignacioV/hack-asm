@@ -110,6 +110,21 @@ JMP  | 1 | 1 | 1 | Unconditional jump
 
 -? kaskaip reikia tuos labelius irgi istrinti. arba tureti atskira komandu lista, kur yra labeliai ir kur nera
 
+23 predefined symbols:
+symbol | value
+R0     | 0
+R1     | 1
+R2     | 2
+...    | ...
+R15    | 15
+SCREEN | 16384
+KBD    | 24576
+SP     | 0
+LCL    | 1
+ARG    | 2
+THIS   | 3
+THAT   | 4
+
 -> goto `NO symbols`
 
 
