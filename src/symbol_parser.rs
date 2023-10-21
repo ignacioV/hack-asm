@@ -1,21 +1,3 @@
-// ka man cia dabar reikia padaryti
-// pradzioj, tiesiog pasidaryti map, kuriame butu sudetos visos konstantos
-// tada reikia sunumeruoti visas eilutes (bet ne LABELius) kad poto galeciau zinoti kur kas pointina
-// tada kiekviena
-//23 predefined symbols:
-//symbol | value
-//R0     | 0
-//R1     | 1
-//R2     | 2
-//...    | ...
-//R15    | 15
-//SCREEN | 16384
-//KBD    | 24576
-//SP     | 0
-//LCL    | 1
-//ARG    | 2
-//THIS   | 3
-//THAT   | 4
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -51,10 +33,13 @@ impl SymbolsTable {
         Self { symbols }
     }
 
-    // NOTE: DO IN TDD STYLE
-    //pub fn add_label(&mut self, label: String, line_no: u8) {
-    //self.symbols.insert(label, line_no.to_string());
-    //}
+    pub fn get(&self, key: String) -> Option<String> {
+        self.symbols.get(&key).cloned()
+    }
+
+    pub fn add_label(&mut self, label: String, line_no: u64) {
+        self.symbols.insert(label, line_no.to_string());
+    }
 
     //pub fn add_symbol(&mut self, label: String, line_no: u8) {
     //self.symbols.insert(label, line_no.to_string());
@@ -83,9 +68,29 @@ pub fn numerate_lines(lines: Vec<String>) -> Vec<NumeratedLine> {
     result
 }
 
+pub fn add_labeled_lines_into_symbols_table(
+    numerated_lines: Vec<NumeratedLine>,
+    symbols_table: &mut SymbolsTable,
+) {
+    let mut current_line: u64 = 0;
+    for line in numerated_lines {
+        if let Some(line_number) = line.number {
+            current_line = line_number;
+        } else {
+            symbols_table.add_label(parse_label(line.line), current_line + 1);
+        }
+    }
+}
+
+fn parse_label(raw: String) -> String {
+    let len = raw.len();
+    raw[1..len - 1].to_string()
+}
+
 #[cfg(test)]
 mod test {
 
+    use crate::symbol_parser::add_labeled_lines_into_symbols_table;
     use crate::symbol_parser::numerate_lines;
     use crate::symbol_parser::NumeratedLine;
     use crate::symbol_parser::SymbolsTable;
@@ -94,18 +99,16 @@ mod test {
     fn should_number_lines_without_labels() {
         //given
         let lines: Vec<String> = vec![
-            "M=0", "D=0", "A=0", "(BUUP)", "(LOOP)", "M+1", "@LOOP", "(BUUP)", "M+1", "M+1",
+            "M=0", "D=0", "A=0", "(BUUP)", "(LOOP)", "M+1", "@LOOP", "(WAM)", "M+1", "M+1",
         ]
         .into_iter()
         .map(|s| s.to_string())
         .collect();
 
         //when
-        println!("lines {:?}", lines);
-
         let result: Vec<NumeratedLine> = numerate_lines(lines);
 
-        ////then
+        //then
         assert_eq!(result.len(), 10);
         assert_eq!(result[0].number, Some(0));
         assert_eq!(result[1].number, Some(1));
@@ -117,5 +120,30 @@ mod test {
         assert_eq!(result[7].number, None);
         assert_eq!(result[8].number, Some(5));
         assert_eq!(result[9].number, Some(6));
+    }
+
+    #[test]
+    fn should_add_labeled_lines_number_into_symbols_table() {
+        //given
+        let lines: Vec<String> = vec![
+            "M=0", "D=0", "A=0", "(BUUP)", "(LOOP)", "M+1", "@LOOP", "(BAM)", "M+1", "M+1",
+        ]
+        .into_iter()
+        .map(|s| s.to_string())
+        .collect();
+
+        let numerated_lines: Vec<NumeratedLine> = numerate_lines(lines);
+
+        let mut symbols_table = SymbolsTable::new();
+        //when
+
+        add_labeled_lines_into_symbols_table(numerated_lines, &mut symbols_table);
+
+        //then
+        println!("da symbols {:#?}", symbols_table);
+
+        assert_eq!(symbols_table.get("LOOP".to_string()), Some("3".to_string()));
+        assert_eq!(symbols_table.get("BUUP".to_string()), Some("3".to_string()));
+        assert_eq!(symbols_table.get("BAM".to_string()), Some("5".to_string()));
     }
 }

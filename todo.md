@@ -102,7 +102,8 @@ JMP  | 1 | 1 | 1 | Unconditional jump
 ### WITH symbols
 --------------------------------------------------
 
-- tureti MAP, kuris butu symbols table. Prideti default values i ji
+- DONE - tureti MAP, kuris default values - poto i ji symbolius reikes sudeti
+- tureti MAP, kuris butu symbols table
 - pereiti per visas eilutes, ir sunumeruoti jas ( iskyrus LABELS ) linked list?
 - pereiti per visas eilutes ir visus (LABELS) sudeti i symbols table
 - pereiti per visus ir @variable sudeti i symbols table -> nuo n=16
