@@ -1,8 +1,7 @@
-
 // ka man cia dabar reikia padaryti
 // pradzioj, tiesiog pasidaryti map, kuriame butu sudetos visos konstantos
 // tada reikia sunumeruoti visas eilutes (bet ne LABELius) kad poto galeciau zinoti kur kas pointina
-// tada kiekviena 
+// tada kiekviena
 //23 predefined symbols:
 //symbol | value
 //R0     | 0
@@ -20,9 +19,9 @@
 use std::collections::HashMap;
 
 #[derive(Debug)]
-pub struct SymbolsTable{
-    symbols: HashMap<String, String>
-} 
+pub struct SymbolsTable {
+    symbols: HashMap<String, String>,
+}
 
 impl SymbolsTable {
     pub fn new() -> Self {
@@ -49,37 +48,74 @@ impl SymbolsTable {
         symbols.insert("ARG".to_string(), "2".to_string());
         symbols.insert("THIS".to_string(), "3".to_string());
         symbols.insert("THAT".to_string(), "4".to_string());
-        Self {
-            symbols
-        }
+        Self { symbols }
     }
 
     // NOTE: DO IN TDD STYLE
     //pub fn add_label(&mut self, label: String, line_no: u8) {
-        //self.symbols.insert(label, line_no.to_string());
+    //self.symbols.insert(label, line_no.to_string());
     //}
 
     //pub fn add_symbol(&mut self, label: String, line_no: u8) {
-        //self.symbols.insert(label, line_no.to_string());
+    //self.symbols.insert(label, line_no.to_string());
     //}
 }
+
+pub struct NumeratedLine {
+    pub line: String,
+    pub number: Option<u64>, // none if its a label
+}
+
+pub fn numerate_lines(lines: Vec<String>) -> Vec<NumeratedLine> {
+    let mut result: Vec<NumeratedLine> = vec![];
+    let mut non_label_line_counter = 0;
+    for line in lines {
+        if line.starts_with("(") {
+            result.push(NumeratedLine { line, number: None });
+            continue;
+        }
+        result.push(NumeratedLine {
+            line,
+            number: Some(non_label_line_counter),
+        });
+        non_label_line_counter += 1;
+    }
+    result
 }
 
 #[cfg(test)]
 mod test {
-    
+
+    use crate::symbol_parser::numerate_lines;
+    use crate::symbol_parser::NumeratedLine;
     use crate::symbol_parser::SymbolsTable;
 
     #[test]
-    fn should() {
+    fn should_number_lines_without_labels() {
         //given
-        // turiu map, kuriame yra sudeti simboliai
-        let symbolsTable = SymbolsTable::new();
+        let lines: Vec<String> = vec![
+            "M=0", "D=0", "A=0", "(BUUP)", "(LOOP)", "M+1", "@LOOP", "(BUUP)", "M+1", "M+1",
+        ]
+        .into_iter()
+        .map(|s| s.to_string())
+        .collect();
 
         //when
+        println!("lines {:?}", lines);
 
-        //then
-        print!("table: {:?}", symbolsTable);
+        let result: Vec<NumeratedLine> = numerate_lines(lines);
+
+        ////then
+        assert_eq!(result.len(), 10);
+        assert_eq!(result[0].number, Some(0));
+        assert_eq!(result[1].number, Some(1));
+        assert_eq!(result[2].number, Some(2));
+        assert_eq!(result[3].number, None);
+        assert_eq!(result[4].number, None);
+        assert_eq!(result[5].number, Some(3));
+        assert_eq!(result[6].number, Some(4));
+        assert_eq!(result[7].number, None);
+        assert_eq!(result[8].number, Some(5));
+        assert_eq!(result[9].number, Some(6));
     }
-
 }
