@@ -46,6 +46,7 @@ impl SymbolsTable {
     //}
 }
 
+#[derive(Debug)]
 pub struct NumeratedLine {
     pub line: String,
     pub number: Option<u64>, // none if its a label
@@ -87,6 +88,12 @@ fn parse_label(raw: String) -> String {
     raw[1..len - 1].to_string()
 }
 
+pub fn remove_label_lines(lines: Vec<NumeratedLine>) -> Vec<NumeratedLine> {
+    lines.into_iter()
+        .filter(|line| line.number.is_some())
+        .collect()
+}
+
 #[cfg(test)]
 mod test {
 
@@ -94,6 +101,7 @@ mod test {
     use crate::symbol_parser::numerate_lines;
     use crate::symbol_parser::NumeratedLine;
     use crate::symbol_parser::SymbolsTable;
+    use crate::symbol_parser::remove_label_lines;
 
     #[test]
     fn should_number_lines_without_labels() {
@@ -140,10 +148,34 @@ mod test {
         add_labeled_lines_into_symbols_table(numerated_lines, &mut symbols_table);
 
         //then
-        println!("da symbols {:#?}", symbols_table);
-
         assert_eq!(symbols_table.get("LOOP".to_string()), Some("3".to_string()));
         assert_eq!(symbols_table.get("BUUP".to_string()), Some("3".to_string()));
         assert_eq!(symbols_table.get("BAM".to_string()), Some("5".to_string()));
+    }
+
+    #[test]
+    fn should_remove_label_lines() {
+        //given
+        let lines: Vec<String> = vec![
+            "M=0", "D=0", "A=0", "(BUUP)", "(LOOP)", "M+1", "@LOOP", "(BAM)", "M+1", "M+1",
+        ]
+        .into_iter()
+        .map(|s| s.to_string())
+        .collect();
+
+        let numerated_lines: Vec<NumeratedLine> = numerate_lines(lines);
+
+        //when
+        let result: Vec<NumeratedLine> = remove_label_lines(numerated_lines);
+
+        //then
+        assert_eq!(result.len(), 7);
+        assert_eq!(result[0].number, Some(0));
+        assert_eq!(result[1].number, Some(1));
+        assert_eq!(result[2].number, Some(2));
+        assert_eq!(result[3].number, Some(3));
+        assert_eq!(result[4].number, Some(4));
+        assert_eq!(result[5].number, Some(5));
+        assert_eq!(result[6].number, Some(6));
     }
 }
