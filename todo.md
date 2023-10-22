@@ -103,13 +103,11 @@ JMP  | 1 | 1 | 1 | Unconditional jump
 --------------------------------------------------
 
 - DONE - tureti MAP, kuris default values - poto i ji symbolius reikes sudeti
-- tureti MAP, kuris butu symbols table
-- pereiti per visas eilutes, ir sunumeruoti jas ( iskyrus LABELS ) linked list?
-- pereiti per visas eilutes ir visus (LABELS) sudeti i symbols table
+- DONE - pereiti per visas eilutes, ir sunumeruoti jas ( iskyrus LABELS ) linked list?
+- DONE - pereiti per visas eilutes ir visus (LABELS) sudeti i symbols table
+- DONE - pereiti per eilutes ir istrinti (Labelius)
 - pereiti per visus ir @variable sudeti i symbols table -> nuo n=16
 - pereiti per visus ir kiekviena symboli pakeisti is lookup table
-
--? kaskaip reikia tuos labelius irgi istrinti. arba tureti atskira komandu lista, kur yra labeliai ir kur nera
 
 23 predefined symbols:
 symbol | value
