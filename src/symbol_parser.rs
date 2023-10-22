@@ -1,7 +1,8 @@
+use crate::a_command_parser::A_CMD;
 use std::collections::HashMap;
 
 #[derive(Debug)]
-pub struct SymbolsTable {
+struct SymbolsTable {
     symbols: HashMap<String, String>,
 }
 
@@ -37,6 +38,14 @@ impl SymbolsTable {
         self.symbols.get(&key).cloned()
     }
 
+    pub fn try_get_if_a_cmd(&self, maybe_a_cmd: String) -> Option<String> {
+        if A_CMD::is_a_command(&maybe_a_cmd) {
+            let key = &try_parse_variable(&maybe_a_cmd).unwrap();
+            return self.symbols.get(key).cloned();
+        }
+        None
+    }
+
     pub fn add_label(&mut self, label: String, line_no: u64) {
         self.symbols.insert(label, line_no.to_string());
     }
@@ -56,7 +65,7 @@ pub struct NumeratedLine {
     pub number: Option<u64>, // none if its a label
 }
 
-pub fn numerate_lines(lines: Vec<String>) -> Vec<NumeratedLine> {
+fn numerate_lines(lines: Vec<String>) -> Vec<NumeratedLine> {
     let mut result: Vec<NumeratedLine> = vec![];
     let mut non_label_line_counter = 0;
     for line in lines {
@@ -73,7 +82,7 @@ pub fn numerate_lines(lines: Vec<String>) -> Vec<NumeratedLine> {
     result
 }
 
-pub fn add_labeled_lines_into_symbols_table(
+fn add_labeled_lines_into_symbols_table(
     numerated_lines: &Vec<NumeratedLine>,
     symbols_table: &mut SymbolsTable,
 ) {
@@ -87,7 +96,7 @@ pub fn add_labeled_lines_into_symbols_table(
     }
 }
 
-pub fn add_variables_into_symbols_table(
+fn add_variables_into_symbols_table(
     numerated_lines: &Vec<NumeratedLine>,
     symbols_table: &mut SymbolsTable,
 ) {
@@ -124,22 +133,52 @@ fn add_labels_and_variables_into_symbols_table(
     add_variables_into_symbols_table(numerated_lines, symbols_table);
 }
 
-pub fn remove_label_lines(lines: Vec<NumeratedLine>) -> Vec<NumeratedLine> {
-    lines.into_iter()
+fn assign_labels_and_variables(
+    numerated_lines: Vec<NumeratedLine>,
+    symbols_table: &mut SymbolsTable,
+) -> Vec<String> {
+    let mut result: Vec<String> = vec![];
+    for line in numerated_lines {
+        if let Some(symbol) = symbols_table.try_get_if_a_cmd(line.line.clone()) {
+            result.push(format!("@{}", symbol))
+        } else {
+            result.push(line.line)
+        }
+    }
+    result
+}
+
+fn remove_label_lines(lines: Vec<NumeratedLine>) -> Vec<NumeratedLine> {
+    lines
+        .into_iter()
         .filter(|line| line.number.is_some())
         .collect()
+}
+
+pub fn handle_symbols(lines: Vec<String>) -> Vec<String> {
+    let numerated_lines: Vec<NumeratedLine> = numerate_lines(lines);
+
+    let mut symbols_table = SymbolsTable::new();
+
+    add_labels_and_variables_into_symbols_table(&numerated_lines, &mut symbols_table);
+
+    let removed_labels: Vec<NumeratedLine> = remove_label_lines(numerated_lines);
+
+    assign_labels_and_variables(removed_labels, &mut symbols_table)
 }
 
 #[cfg(test)]
 mod test {
 
     use crate::symbol_parser::add_labeled_lines_into_symbols_table;
+    use crate::symbol_parser::add_labels_and_variables_into_symbols_table;
+    use crate::symbol_parser::add_variables_into_symbols_table;
+    use crate::symbol_parser::assign_labels_and_variables;
+    use crate::symbol_parser::handle_symbols;
     use crate::symbol_parser::numerate_lines;
+    use crate::symbol_parser::remove_label_lines;
     use crate::symbol_parser::NumeratedLine;
     use crate::symbol_parser::SymbolsTable;
-    use crate::symbol_parser::remove_label_lines;
-    use crate::symbol_parser::add_variables_into_symbols_table;
-    use crate::symbol_parser::add_labels_and_variables_into_symbols_table;
 
     #[test]
     fn should_number_lines_without_labels() {
@@ -221,16 +260,9 @@ mod test {
     fn should_add_variables_to_symbols_table() {
         //given
         let lines: Vec<String> = vec![
-            "M=0",
-            "@var1",
-            "A=0",
-            "(BUUP)",
-            "(LOOP)",
-            "M+1",
+            "M=0", "@var1", "A=0", "(BUUP)", "(LOOP)", "M+1",
             //"@LOOP", // this breaks da variables
-            "(BAM)",
-            "@var2",
-            "M+1",
+            "(BAM)", "@var2", "M+1",
         ]
         .into_iter()
         .map(|s| s.to_string())
@@ -244,8 +276,14 @@ mod test {
         add_variables_into_symbols_table(&numerated_lines, &mut symbols_table);
 
         //then
-        assert_eq!(symbols_table.get("var1".to_string()), Some("16".to_string()));
-        assert_eq!(symbols_table.get("var2".to_string()), Some("17".to_string()));
+        assert_eq!(
+            symbols_table.get("var1".to_string()),
+            Some("16".to_string())
+        );
+        assert_eq!(
+            symbols_table.get("var2".to_string()),
+            Some("17".to_string())
+        );
         assert_eq!(symbols_table.get("LOOP".to_string()), None);
     }
 
@@ -253,16 +291,7 @@ mod test {
     fn should_add_labels_and_variables_to_symbols_table() {
         //given
         let lines: Vec<String> = vec![
-            "M=0",
-            "@var1",
-            "A=0",
-            "(BUUP)",
-            "(LOOP)",
-            "M+1",
-            "@LOOP",
-            "(BAM)",
-            "@var2",
-            "M+1",
+            "M=0", "@var1", "A=0", "(BUUP)", "(LOOP)", "M+1", "@LOOP", "(BAM)", "@var2", "M+1",
         ]
         .into_iter()
         .map(|s| s.to_string())
@@ -276,10 +305,65 @@ mod test {
         add_labels_and_variables_into_symbols_table(&numerated_lines, &mut symbols_table);
 
         //then
-        assert_eq!(symbols_table.get("var1".to_string()), Some("16".to_string()));
-        assert_eq!(symbols_table.get("var2".to_string()), Some("17".to_string()));
+        assert_eq!(
+            symbols_table.get("var1".to_string()),
+            Some("16".to_string())
+        );
+        assert_eq!(
+            symbols_table.get("var2".to_string()),
+            Some("17".to_string())
+        );
         assert_eq!(symbols_table.get("LOOP".to_string()), Some("3".to_string()));
         assert_eq!(symbols_table.get("BUUP".to_string()), Some("3".to_string()));
         assert_eq!(symbols_table.get("BAM".to_string()), Some("5".to_string()));
+    }
+
+    #[test]
+    fn should_assign_from_symbols_table() {
+        //given
+        let lines: Vec<String> = vec![
+            "M=0", "@var1", "A=0", "(BUUP)", "(LOOP)", "M+1", "@LOOP", "(BAM)", "@var2", "M+1",
+        ]
+        .into_iter()
+        .map(|s| s.to_string())
+        .collect();
+
+        let numerated_lines: Vec<NumeratedLine> = numerate_lines(lines);
+
+        let mut symbols_table = SymbolsTable::new();
+        add_labels_and_variables_into_symbols_table(&numerated_lines, &mut symbols_table);
+        //when
+
+        let result: Vec<String> = assign_labels_and_variables(numerated_lines, &mut symbols_table);
+
+        //then
+        assert_eq!(&result[1], "@16");
+        assert_eq!(&result[6], "@3");
+        assert_eq!(&result[8], "@17");
+    }
+
+    #[test]
+    fn should_assign_symbols_remove_labels_and_return_string_vec() {
+        //given
+        let lines: Vec<String> = vec![
+            "M=0", "@var1", "A=0", "(BUUP)", "(LOOP)", "M+1", "@LOOP", "(BAM)", "@var2", "M+1",
+        ]
+        .into_iter()
+        .map(|s| s.to_string())
+        .collect();
+
+        //when
+
+        let result: Vec<String> = handle_symbols(lines);
+
+        //then
+
+        assert_eq!(&result[0], "M=0");
+        assert_eq!(&result[1], "@16");
+        assert_eq!(&result[2], "A=0");
+        assert_eq!(&result[3], "M+1");
+        assert_eq!(&result[4], "@3");
+        assert_eq!(&result[5], "@17");
+        assert_eq!(&result[6], "M+1");
     }
 }

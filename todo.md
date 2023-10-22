@@ -106,8 +106,8 @@ JMP  | 1 | 1 | 1 | Unconditional jump
 - DONE - pereiti per visas eilutes, ir sunumeruoti jas ( iskyrus LABELS ) linked list?
 - DONE - pereiti per visas eilutes ir visus (LABELS) sudeti i symbols table
 - DONE - pereiti per eilutes ir istrinti (Labelius)
-- pereiti per visus ir @variable sudeti i symbols table -> nuo n=16
-- pereiti per visus ir kiekviena symboli pakeisti is lookup table
+- DONE - pereiti per visus ir @variable sudeti i symbols table -> nuo n=16
+- DONE !!---pereiti per visus ir kiekviena symboli pakeisti is lookup table
 
 23 predefined symbols:
 symbol | value
