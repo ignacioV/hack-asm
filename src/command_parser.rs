@@ -26,9 +26,9 @@ impl SimpleCommand {
     }
 }
 
-pub fn parse_simple(commands: Vec<&str>) -> Vec<SimpleCommand> {
+pub fn parse_simple(commands: Vec<String>) -> Vec<SimpleCommand> {
     commands
-        .into_iter()
+        .iter()
         .map(|cmd| SimpleCommand::new(cmd))
         .collect()
 }
@@ -70,11 +70,11 @@ mod command_test {
     #[test]
     fn should_parse_multiple_commands() {
         //given
-        let a_cmd1: &str = "@123";
-        let c_cmd2: &str = "D=M-D;JNE";
-        let a_cmd3: &str = "@321";
-        let c_cmd4: &str = "A=D|M";
-        let commands: Vec<&str> = vec![a_cmd1, c_cmd2, a_cmd3, c_cmd4];
+        let a_cmd1: String = "@123".to_string();
+        let c_cmd2: String = "D=M-D;JNE".to_string();
+        let a_cmd3: String = "@321".to_string();
+        let c_cmd4: String = "A=D|M".to_string();
+        let commands: Vec<String> = vec![a_cmd1, c_cmd2, a_cmd3, c_cmd4];
 
         //when
         let result = parse_simple(commands);
@@ -90,11 +90,11 @@ mod command_test {
     #[test]
     fn should_turn_vec_command_to_binary_vec() {
         //given
-        let a_cmd1: &str = "@123";
-        let c_cmd2: &str = "D=M-D;JNE";
-        let a_cmd3: &str = "@321";
-        let c_cmd4: &str = "A=D|M";
-        let commands: Vec<&str> = vec![a_cmd1, c_cmd2, a_cmd3, c_cmd4];
+        let a_cmd1: String = "@123".to_string();
+        let c_cmd2: String = "D=M-D;JNE".to_string();
+        let a_cmd3: String = "@321".to_string();
+        let c_cmd4: String = "A=D|M".to_string();
+        let commands: Vec<String> = vec![a_cmd1, c_cmd2, a_cmd3, c_cmd4];
         let parsed_commands = parse_simple(commands);
 
         //when

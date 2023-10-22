@@ -126,4 +126,21 @@ THAT   | 4
 
 -> goto `NO symbols`
 
+--------------------------------------------------
+### Everything put together
+--------------------------------------------------
+
+- perskaityti faila, nurodant file path 
+- perskaityti kiekviena eilute is failo, ir susideti i lista
+- istrinti visus komentarus, jeigu prasideda du `//` tada viska isstrinti
+- isstrinti visus white spaces
+- isstrinti visas empty line
+
+- next - 
+- parsinti visas eilutes -> symbolius assigninti
+- next -
+- parsinti visas eilutes i commandas
+- next -
+- paversti visas komandas i strings
+- irasyti visas strings commandas i out faila
 

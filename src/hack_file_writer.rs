@@ -1,4 +1,3 @@
-use std::fs;
 use std::fs::File;
 use std::io::Write;
 pub fn write_to(file_path: &str, commands: Vec<String>) -> std::io::Result<()> {
@@ -21,7 +20,7 @@ mod file_writer_test {
         let cmd2: &str = "do=minuifnitiy;jumop";
         let cmd3: &str = "@1lol345";
         let commands: Vec<String> = vec![cmd1.to_string(), cmd2.to_string(), cmd3.to_string()];
-        let output_file: &str = "test-hack.asm";
+        let output_file: &str = "out.hack";
 
         //when
         write_to(output_file, commands);

@@ -1,6 +1,6 @@
 use std::fs;
 
-struct FileReader {
+pub struct FileReader {
     file_path: String,
 }
 
@@ -11,7 +11,7 @@ impl FileReader {
         }
     }
 
-    fn read(&self) -> String {
+    pub fn read(&self) -> String {
         fs::read_to_string(self.file_path.clone()).expect("Can't read file")
     }
 }
