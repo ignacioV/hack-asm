@@ -9,6 +9,7 @@ struct SymbolsTable {
 impl SymbolsTable {
     pub fn new() -> Self {
         let mut symbols: HashMap<String, String> = HashMap::new();
+        symbols.insert("R0".to_string(), "0".to_string());
         symbols.insert("R1".to_string(), "1".to_string());
         symbols.insert("R2".to_string(), "2".to_string());
         symbols.insert("R3".to_string(), "3".to_string());
