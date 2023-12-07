@@ -38,9 +38,9 @@ impl SymbolsTable {
         self.symbols.get(&key).cloned()
     }
 
-    pub fn try_get_if_a_cmd(&self, maybe_a_cmd: String) -> Option<String> {
+    pub fn try_get_if_a_variable_cmd(&self, maybe_a_cmd: String) -> Option<String> {
         if A_CMD::is_a_command(&maybe_a_cmd) {
-            let key = &try_parse_variable(&maybe_a_cmd).unwrap();
+            let key = &try_parse_variable(&maybe_a_cmd)?;
             return self.symbols.get(key).cloned();
         }
         None
@@ -119,7 +119,12 @@ fn parse_label(raw: &str) -> String {
 fn try_parse_variable(raw: &str) -> Option<String> {
     let len = raw.len();
     if raw.starts_with("@") {
-        Some(raw[1..len].to_string())
+	let pointer = &raw[1..len];
+        let is_number = pointer.parse::<u64>();
+	match is_number {
+	    Ok(_) => return None, // it was a hard coded pointer, not a variable
+	    Err(_) => return Some(pointer.to_string()), 
+	}
     } else {
         None
     }
@@ -139,7 +144,7 @@ fn assign_labels_and_variables(
 ) -> Vec<String> {
     let mut result: Vec<String> = vec![];
     for line in numerated_lines {
-        if let Some(symbol) = symbols_table.try_get_if_a_cmd(line.line.clone()) {
+        if let Some(symbol) = symbols_table.try_get_if_a_variable_cmd(line.line.clone()) {
             result.push(format!("@{}", symbol))
         } else {
             result.push(line.line)
@@ -319,10 +324,10 @@ mod test {
     }
 
     #[test]
-    fn should_assign_from_symbols_table() {
+    fn should_assign_from_symbols_table_but_not_simple_numbers() {
         //given
         let lines: Vec<String> = vec![
-            "M=0", "@var1", "A=0", "(BUUP)", "(LOOP)", "M+1", "@LOOP", "(BAM)", "@var2", "M+1",
+            "M=0", "@var1", "A=0", "(BUUP)", "(LOOP)", "M+1", "@LOOP", "(BAM)", "@var2", "M+1", "@7", "M=0",
         ]
         .into_iter()
         .map(|s| s.to_string())
@@ -337,9 +342,10 @@ mod test {
         let result: Vec<String> = assign_labels_and_variables(numerated_lines, &mut symbols_table);
 
         //then
-        assert_eq!(&result[1], "@16");
-        assert_eq!(&result[6], "@3");
-        assert_eq!(&result[8], "@17");
+        assert_eq!(&result[1], "@16"); // was @var1
+        assert_eq!(&result[6], "@3"); // was @LOOP
+        assert_eq!(&result[8], "@17"); // was @var2
+        assert_eq!(&result[10], "@7"); // should not change fomr 7
     }
 
     #[test]

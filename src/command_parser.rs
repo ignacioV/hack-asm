@@ -56,6 +56,18 @@ mod command_test {
     }
 
     #[test]
+    fn should_create_a_command_2() {
+        //given
+        let a_cmd: &str = "@2";
+
+        //when
+        let result = SimpleCommand::new(a_cmd);
+
+        //then
+        assert_eq!("0000000000000010", result.to_binary());
+    }
+
+    #[test]
     fn should_create_c_command() {
         //given
         let c_cmd: &str = "D=M-D;JNE";
